@@ -39,6 +39,8 @@ plastic_bins = extract_bin_info(plastic_bin_dict)
 
 garbage_bins = pd.concat([metal_bins, plastic_bins]).reset_index(drop=True)
 
+garbage_bins.to_csv('data/garbage_bin.csv', index=False)
+
 
 truck = pd.read_csv('data/truck.csv')
 
