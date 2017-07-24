@@ -55,14 +55,47 @@ def save_all_bins():
 #save_all_bins()
 #save_bin('auto')
 #bin_data = fetch_extract_bin_data('all')
+#
+#save_bin('metal')
+#save_bin('plastic')
 
 
+def fetch_bin_ans():
+    url = 'http://api2.traffy.in.th/api/smartphuket/garbage/get_auto_bin_ans'
+    return requests.get(url).json()
 
+def fetch_extract_bin_ans():
+    response = fetch_bin_ans()
+    
+    ids = []
+    lat = []
+    lon = []
+    name = []
+    bin_type = []
+    verified = []
+    is_correct = []
+    for bin in response:
+        ids += [bin['bin_id']]
+        lat += [float(bin['coords'][1])]
+        lon += [float(bin['coords'][0])]
+        name += [bin['name_th']]
+        bin_type += [bin['type']]
+        verified += [bin['verified']]
+        is_correct += [bin['is_correct'] if(bin['verified']) else 'undefined']
+    
+    bins = pd.DataFrame({'id': ids, 'lat': lat, 'lon': lon, 'name': name, 
+                         'type': bin_type, 'verified': verified,
+                         'is_correct': is_correct})
 
+    return bins
 
+def save_bin_ans():
+    verified_bin = fetch_extract_bin_ans()
+    
+#    verified_bin = verified_bin[verified_bin['is_correct'] == True]
+    verified_bin.to_csv('data/bin_ans.csv', index=False)
 
-
-
+#save_bin_ans()
 
 
 
