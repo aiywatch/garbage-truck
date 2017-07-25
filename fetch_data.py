@@ -61,12 +61,26 @@ def save_all_bins():
 #save_bin('metal')
 #save_bin('plastic')
 
+GARBAGE_TRUCK_PATH = 'data/garbage_truck/'
+
+def get_all_garbage_truck_vid():
+    url = 'https://api.traffy.xyz/vehicle/?line=phuket-garbage-truck'
+    response = requests.get(url).json()
+    garbage_trucks = response['results']
+    garbage_truck_ids = []
+    
+    for truck in garbage_trucks:
+        garbage_truck_ids += [truck['vehicle_id']]
+        
+    return garbage_truck_ids
+
+#get_all_garbage_truck_vid()
 
 ## Query Truck Data from MongoDB
-def fetch_garbage_truck_data():
-    start = datetime.datetime(2017, 7, 18, 0, 0, 0, 0)
-    end = datetime.datetime(2017, 7, 24, 23, 0, 0, 0)
-    query_vid = '359486060261458'
+def fetch_garbage_truck_data_to_csv(query_vid, start, end):
+#    start = datetime.datetime(2017, 7, 18, 0, 0, 0, 0)
+#    end = datetime.datetime(2017, 7, 24, 23, 0, 0, 0)
+#    query_vid = '359486060261458'
     
     import pprint
     vehicle_log = connection.connect_mongo()
@@ -88,13 +102,41 @@ def fetch_garbage_truck_data():
         
     truck_info = pd.DataFrame({'vid': vid, 'timestamp':timestamp, 'lat':lat, 
                                'lon':lon, 'speed': speed})
-#    
+    
+    truck_info.to_csv(GARBAGE_TRUCK_PATH + query_vid + '.csv', index=False)
+    print('Garbage Truck Data saved!')
+    
     return truck_info
 
 #truck = fetch_garbage_truck_data()
 #truck.to_csv('data/truck_7days.csv', index=False)
 
+def fetch_all_garbage_truck_data_to_csv(start_date, end_date):
+    
+    truck_vids = get_all_garbage_truck_vid()
+    
+    for vid in truck_vids:
+        fetch_garbage_truck_data_to_csv(vid, start_date, end_date)
 
+#['359486060261458',
+#'359486060261466',
+# '359486060261516',
+# '359486060261649',
+# '359486060261672',
+# '359486060261680',
+# '359486060261706',
+# '359486060261722',
+# '359486060261730',
+# '359486060261789',
+# '359486060261805',
+# '359486060261813',
+# '359486060261821',
+# '359486060261839',
+# '359486060261847']
+
+#start_date = datetime.datetime(2017, 7, 18, 0, 0, 0, 0)
+#end_date = datetime.datetime(2017, 7, 24, 23, 0, 0, 0)
+#fetch_all_garbage_truck_data_to_csv(start_date, end_date)
 
 
 ## Query actual Bin Answers, surveying manually from Phuket
