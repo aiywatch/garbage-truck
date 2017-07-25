@@ -1,6 +1,8 @@
 import requests
 import pandas as pd
 import numpy as np
+import datetime
+import connection
 
 def fetch_bin_data(bin_type):
     BIN_TYPE_LIST = ['all', 'metal', 'plastic', 'auto']
@@ -60,6 +62,42 @@ def save_all_bins():
 #save_bin('plastic')
 
 
+## Query Truck Data from MongoDB
+def fetch_garbage_truck_data():
+    start = datetime.datetime(2017, 7, 18, 0, 0, 0, 0)
+    end = datetime.datetime(2017, 7, 24, 23, 0, 0, 0)
+    query_vid = '359486060261458'
+    
+    import pprint
+    vehicle_log = connection.connect_mongo()
+    print('mongoDB connected')
+    
+    vid = []
+    timestamp = []
+    lat = []
+    lon = []
+    speed = []
+    
+    for v in vehicle_log.find({'vehicle_id': query_vid, 'gps_timestamp': {'$gte': start, '$lt': end}}):
+        pprint.pprint(v['gps_timestamp'])
+        vid += [v['vehicle_id']]
+        timestamp += [v['log_timestamp']]
+        lat += [v['latitude']]
+        lon += [v['longitude']]
+        speed += [v['speed']]
+        
+    truck_info = pd.DataFrame({'vid': vid, 'timestamp':timestamp, 'lat':lat, 
+                               'lon':lon, 'speed': speed})
+#    
+    return truck_info
+
+#truck = fetch_garbage_truck_data()
+#truck.to_csv('data/truck_7days.csv', index=False)
+
+
+
+
+## Query actual Bin Answers, surveying manually from Phuket
 def fetch_bin_ans():
     url = 'http://api2.traffy.in.th/api/smartphuket/garbage/get_auto_bin_ans'
     return requests.get(url).json()

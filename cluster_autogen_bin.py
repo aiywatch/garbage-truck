@@ -1,11 +1,9 @@
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.cluster import DBSCAN
 from geopy.distance import great_circle
 from shapely.geometry import MultiPoint
 
-from mpl_toolkits.basemap import Basemap
 
 # http://geoffboeing.com/2014/08/clustering-to-reduce-spatial-data-set-size/
 
@@ -37,36 +35,7 @@ rep_points = pd.DataFrame({'lon':lons, 'lat':lats})
 rs = rep_points.apply(lambda row: auto_bin[(auto_bin['lat']==row['lat']) & (auto_bin['lon']==row['lon'])].iloc[0], axis=1)
 
 
-
-
 #rs.to_csv('data/representative_bin.csv', index=False)
 
-
-#fig, ax = plt.subplots(figsize=[10, 6])
-#rs_scatter = ax.scatter(rs['lon'], rs['lat'], c='#99cc99', edgecolor='None', alpha=0.7, s=120)
-#df_scatter = ax.scatter(auto_bin['lon'], auto_bin['lat'], c='k', alpha=0.9, s=3)
-#ax.set_title('Full data set vs DBSCAN reduced set')
-#ax.set_xlabel('Longitude')
-#ax.set_ylabel('Latitude')
-#ax.legend([df_scatter, rs_scatter], ['Full set', 'Reduced set'], loc='upper right')
-#plt.show()
-
-
-#map = Basemap(projection='mill', llcrnrlat=7.85, urcrnrlat=7.92, llcrnrlon=98.25, 
-#              urcrnrlon=98.35, resolution='i')
-#
-#map.drawcoastlines()
-#map.drawcountries(linewidth=0.25)
-#map.fillcontinents()
-#
-#map.drawmapboundary()
-#
-#
-#for index, bin in rs.iterrows():
-#    x,y = map(bin['lon'], bin['lat'])
-#    map.plot(x,y, 'ro')
-#
-#plt.title('Phuket')
-#plt.show()
 
 
