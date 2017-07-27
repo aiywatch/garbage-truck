@@ -103,6 +103,7 @@ def fetch_garbage_truck_data_to_csv(query_vid, start, end):
     truck_info = pd.DataFrame({'vid': vid, 'timestamp':timestamp, 'lat':lat, 
                                'lon':lon, 'speed': speed})
     
+    print('Start exporting')
     truck_info.to_csv(GARBAGE_TRUCK_PATH + query_vid + '.csv', index=False)
     print('Garbage Truck Data saved!')
     
@@ -134,8 +135,9 @@ def fetch_all_garbage_truck_data_to_csv(start_date, end_date):
 # '359486060261839',
 # '359486060261847']
 
-#start_date = datetime.datetime(2017, 7, 18, 0, 0, 0, 0)
-#end_date = datetime.datetime(2017, 7, 24, 23, 0, 0, 0)
+start_date = datetime.datetime(2017, 7, 17, 0, 0, 0, 0)
+end_date = datetime.datetime(2017, 7, 25, 23, 59, 59, 0)
+fetch_garbage_truck_data_to_csv('359486060261458', start_date, end_date)
 #fetch_all_garbage_truck_data_to_csv(start_date, end_date)
 
 

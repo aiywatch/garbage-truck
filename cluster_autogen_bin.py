@@ -5,6 +5,8 @@ from geopy.distance import great_circle
 from shapely.geometry import MultiPoint
 import requests
 
+import connection
+
 # http://geoffboeing.com/2014/08/clustering-to-reduce-spatial-data-set-size/
 
 #import fetch_data
@@ -32,7 +34,7 @@ def fetch_auto_bin_from_api():
     response = requests.get(url).json()
     auto_bin_dict = response['results']
     
-    return _extract_bin_info(auto_bin_dict)
+    return _extract_bin_info(auto_bin_dict), auto_bin_dict
 
 
 def cluster_auto_detected_bins(auto_bin):
@@ -62,17 +64,47 @@ def cluster_auto_detected_bins(auto_bin):
 
 
 
+def get_representative_points():
+    #auto_bin = pd.read_csv('data/auto_bin.csv')
+    auto_bin, auto_bin_raw = fetch_auto_bin_from_api()
+    
+    rs = cluster_auto_detected_bins(auto_bin)
+    #rs.to_csv('data/representative_bin.csv', index=False)
+    
+    detailed_rs = []
+    for bin in auto_bin_raw:
+        if(bin['id'] in list(rs['id'])):
+            detailed_rs += [bin]
+    
+    return detailed_rs
 
-#auto_bin = pd.read_csv('data/auto_bin.csv')
-auto_bin = fetch_auto_bin_from_api()
-
-rs = cluster_auto_detected_bins(auto_bin)
-#rs.to_csv('data/representative_bin.csv', index=False)
 
 
+def insert_representative_point_to_mongo(detailed_rs):
+    clustered_auto_detected_bin = connection.connect_mongo_garbage()
+    
+    clustered_auto_detected_bin.insert_many(detailed_rs)
+    
+def fetch_insert_representative_point_to_mongo():
+    detailed_rs = get_representative_points()
+    insert_representative_point_to_mongo(detailed_rs)
 
 
+#clustered_auto_detected_bin.count()
 
+def get_clustered_auto_bins():
+    clustered_auto_detected_bin = connection.connect_mongo_garbage()
+    
+    clustered_bins = []
+    for bin in clustered_auto_detected_bin.find():
+        clustered_bins += [bin]
+        
+    return clustered_bins
+
+import jsonify
+@app.route('/get_clustered_auto_bins', methods=['GET'])
+def predict_arrival_time(bus_line, usr_lat, usr_lon, usr_dir):
+    return jsonify(get_clustered_auto_bins())
 
 
 
