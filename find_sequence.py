@@ -249,3 +249,79 @@ def merge_seqs(*seqs):
 #    return km
 #
 #truck['haversine'] = truck.apply(haversine, axis=1)
+
+
+
+
+
+#from difflib import SequenceMatcher
+#SequenceMatcher(None, bin_sequence[0], bin_sequence[6]).ratio()
+
+#selected_sequences = [seq for i, seq in bin_sequence.items() if(seq.shape[0] > 4)] 
+
+
+
+
+#def resemble_score(a, b):
+#    intersection = len(set(a.dropna()).intersection(b.dropna()))
+#    union = len(set(a.dropna()).union(b.dropna()))
+#    return intersection/union
+#
+#resemble = []
+#for i, col in bin_sequence.items():
+#    sub_resemble = []
+#    for i2, col2 in bin_sequence.items():
+#        score = resemble_score(col, col2)
+##        if((i!=i2) & (score>0.35)):
+#        print(i, i2, score)
+#        sub_resemble += [score]
+#        resemble += [sub_resemble]
+
+#set(resemble)
+
+#coll = []
+#
+#for i in range(len(resemble[0])):
+#    sub_coll = set([i])
+#    for j in range(len(resemble[0])):
+#        if(resemble[i][j] > 0.35):
+#            sub_coll.add(j)
+#    coll += [sub_coll]
+
+
+
+
+#def extract_sequence(truck_data):
+#    from collections import OrderedDict
+#    MAX_PICKUP_DISTANCE = 0.04
+##    MIN_POINTS = 4
+#    
+#    truck_data = truck_data[truck_data['distance_to_closest_bin'] < MAX_PICKUP_DISTANCE]
+#
+#    
+#    temp_truck = truck_data.copy().reset_index(drop=True)
+#    bin_sequences = []
+#    
+#    for i, point in temp_truck.iterrows():
+#        
+#        if (i == 0):
+#            sequence = []
+#        elif (point['timestamp'] - temp_truck.loc[i-1, 'timestamp'] 
+#            > datetime.timedelta(hours=1.5)):
+#            bin_sequences += [sequence]
+#            sequence = []
+#    
+#        sequence += [point['closest_bin_id']]
+#    bin_sequences += [sequence]
+#
+##    selected_sequences = [seq for seq in bin_sequences if(len(seq) > MIN_POINTS)] 
+#
+#    unique_bin_sequence = [list(OrderedDict.fromkeys(sequence)) for sequence in bin_sequences]
+#    return pd.DataFrame(unique_bin_sequence).T
+##    return pd.DataFrame(selected_sequences).T
+
+
+#bin_sequence = extract_sequence(min_truck)
+
+
+#truck_21 = truck[truck['trip_id']==21]
