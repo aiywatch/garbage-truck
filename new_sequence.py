@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import datetime
 from geopy.distance import vincenty
-
+import arrow
 
 GARBAGE_DATA_PATH = 'data/garbage_truck/'
 
@@ -187,8 +187,8 @@ def get_bin_sequence(truck, vid = '359486060261458', all_bin = fetch_bin_data())
         selected_sequence, selected_route, route_start, route_end = select_sequence(bin_sequence, trip_id)
         
         bin_route_dict = {
-                    'route_start': route_start,
-                    'route_end': route_end,
+                    'route_start': arrow.get(route_start).naive,
+                    'route_end': arrow.get(route_end).naive,
                     'vehicle_id': vid,
                     'bin_sequence': selected_sequence.to_dict(),
                     'bin_route': selected_route.to_dict()
@@ -219,12 +219,12 @@ save_all_bin_route()
 
 
 
-#
+
 #import connection
 #bin_route_connection = connection.connect_mongo_garbage_bin_route()
-#bin_route_connection.insert_many(bin_routes)
+##bin_route_connection.insert_many(bin_routes)
 #bin_route_connection.delete_many({})
-
+#
 #for bin in bin_route_connection.find():
 #    print(bin)
 #    print('1111111111111111111111111111111111111111111')
