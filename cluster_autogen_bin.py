@@ -103,8 +103,12 @@ def get_clustered_auto_bins():
 
 import jsonify
 @app.route('/get_clustered_auto_bins', methods=['GET'])
-def predict_arrival_time(bus_line, usr_lat, usr_lon, usr_dir):
+def get_clustered_auto_bins():
     return jsonify(get_clustered_auto_bins())
+
+
+
+
 
 
 

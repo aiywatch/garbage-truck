@@ -151,7 +151,7 @@ def get_bin_sequence(truck, vid = '359486060261458', all_bin = fetch_bin_data())
     min_truck['timestamp'] = pd.to_datetime(min_truck['timestamp'])
     
     
-    MAX_PICKUP_DISTANCE = 0.04
+    MAX_PICKUP_DISTANCE = 0.05
     truck_data = min_truck[min_truck['distance_to_closest_bin'] < MAX_PICKUP_DISTANCE]
     bin_sequence = truck_data.groupby('trip_id')['closest_bin_id'].apply(list)
     
@@ -159,7 +159,7 @@ def get_bin_sequence(truck, vid = '359486060261458', all_bin = fetch_bin_data())
         selected_sequence = bin_sequence[trip_id]
     #    selected_sequence_trip_id = bin_sequence.index[trip_id]
         selected_route = truck[truck['trip_id'] == trip_id]
-        selected_route = selected_route[selected_route['stage'] != 'long_stop'][::100]
+        selected_route = selected_route[selected_route['stage'] != 'long_stop'][::4]
         
         selected_route.drop(['stage', 'stage_id', 'trip_id', 'vid'], axis=1, inplace=True)
         selected_route.reset_index(drop=True, inplace=True)
@@ -173,12 +173,12 @@ def get_bin_sequence(truck, vid = '359486060261458', all_bin = fetch_bin_data())
         
         
         all_bin_id = all_bin.set_index('id')
-        selected_sequence_with_detail = all_bin_id.loc[selected_sequence, :].drop('index', axis=1)
+        selected_sequence_with_detail = all_bin_id.loc[selected_sequence, :] #.drop('index', axis=1)
         selected_sequence_with_detail.reset_index(drop=True, inplace=True)
         selected_sequence_with_detail.index = selected_sequence_with_detail.index.map(str)
         selected_sequence_with_detail = selected_sequence_with_detail.applymap(str)
-    
-    
+        selected_sequence_with_detail.columns = ['bin_id', 'lat', 'lon', 'name', 'type']
+        
         return (selected_sequence_with_detail, selected_route, route_start, route_end)
     
     bin_routes = []
@@ -196,7 +196,7 @@ def get_bin_sequence(truck, vid = '359486060261458', all_bin = fetch_bin_data())
     #    print(trip_id)
         bin_routes += [bin_route_dict]
         
-    return bin_routes
+    return bin_routes#, bin_sequence
 
 def save_route_to_mongo(bin_routes):
     import connection
@@ -206,7 +206,7 @@ def save_route_to_mongo(bin_routes):
 
 
 #all_bin = fetch_bin_data()
-#vid = '359486060261458'
+
 
 def save_all_bin_route():
     for vid in VALID_TRUCK_VIDS:
@@ -222,20 +222,27 @@ save_all_bin_route()
 
 #import connection
 #bin_route_connection = connection.connect_mongo_garbage_bin_route()
-##bin_route_connection.insert_many(bin_routes)
 #bin_route_connection.delete_many({})
 #
-#for bin in bin_route_connection.find():
-#    print(bin)
-#    print('1111111111111111111111111111111111111111111')
+#bin_route_connection.find_one()
 
 
 
+#vid = '359486060261458'
+#truck = fetch_truck_data(vid)
+#bin_routes = get_bin_sequence(truck, vid)
+#bin_sequence = bin_routes[0]['bin_sequence']
 
-
-
-
-
+#
+#bin_route = bin_routes[0]
+#
+#route = bin_route['bin_route']
+#route_df = pd.DataFrame.from_dict(route)
+#
+#route_df.to_csv('test_route.csv')
+#
+#bins = bin_route['bin_sequence']
+#bins_df = pd.DataFrame.from_dict(bins)
 
 
 
