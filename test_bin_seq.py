@@ -23,5 +23,17 @@ for bin in response:
 bin_sequences_df = pd.DataFrame(bin_sequences)
 
 
+from pymongo import MongoClient
+host='db0.traffy.xyz'
+port=27017
+user='wichai'#'attapon'
+password='traffy-w-nectec-9'#'recent-zippered-pasty'
 
+client = MongoClient(host,port)
+
+client.garbage.authenticate(user, password)
+
+#client.garbage.collection_names()
+
+truck_state = client.garbage.truck_state
 
