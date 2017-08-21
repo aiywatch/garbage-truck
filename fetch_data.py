@@ -135,9 +135,9 @@ def fetch_all_garbage_truck_data_to_csv(start_date, end_date):
 # '359486060261839',
 # '359486060261847']
 
-start_date = datetime.datetime(2017, 7, 17, 0, 0, 0, 0)
-end_date = datetime.datetime(2017, 7, 25, 23, 59, 59, 0)
-fetch_garbage_truck_data_to_csv('359486060261458', start_date, end_date)
+#start_date = datetime.datetime(2017, 7, 17, 0, 0, 0, 0)
+#end_date = datetime.datetime(2017, 7, 25, 23, 59, 59, 0)
+#fetch_garbage_truck_data_to_csv('359486060261458', start_date, end_date)
 #fetch_all_garbage_truck_data_to_csv(start_date, end_date)
 
 

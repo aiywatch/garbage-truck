@@ -215,7 +215,11 @@ def save_all_bin_route():
         save_route_to_mongo(bin_routes)
         print('*****' + vid + ' saved!')
 
-save_all_bin_route()
+#save_all_bin_route()
+
+
+#truck = fetch_truck_data(VALID_TRUCK_VIDS[0])
+#bin_routes = get_bin_sequence(truck, VALID_TRUCK_VIDS[0])
 
 
 
